@@ -1,20 +1,18 @@
 package main
 
 import (
-	"context"
+	"errors"
 	"fmt"
 	"io"
 	"log"
-	"net/http"
 	"os"
-	"os/signal"
 	"strings"
-	"syscall"
-	"time"
 
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/tja/hue-picker/cmd"
 )
 
 // Define root command
@@ -23,51 +21,20 @@ var CmdRoot = &cobra.Command{
 	Long:              "Philips Hue Color Picker",
 	Args:              cobra.NoArgs,
 	Version:           "0.0.1",
+	CompletionOptions: cobra.CompletionOptions{DisableDefaultCmd: true},
 	PersistentPreRunE: setup,
-	Run:               runRoot,
 }
 
 // Initialize command options
 func init() {
 	// Logging
 	CmdRoot.PersistentFlags().String("log-level", "info", "verbosity of logging output")
-	CmdRoot.Flags().Bool("json", false, "change logging format to JSON")
+	CmdRoot.Flags().Bool("log-json", false, "change logging format to JSON")
 
-	// API
-	CmdRoot.Flags().String("host", ":80", "host API server should listen on")
-}
-
-// runRoot is called when the root command is used.
-func runRoot(cmd *cobra.Command, args []string) {
-	// Start HTTP server
-	srv := &http.Server{
-		Addr: viper.GetString("host"),
-	}
-
-	go func() {
-		err := srv.ListenAndServe()
-		if err != nil && err != http.ErrServerClosed {
-			logrus.WithError(err).Fatal("Failed to start server")
-		}
-	}()
-
-	logrus.WithField("host", srv.Addr).Info("Server is listening")
-
-	// Wait for user termination
-	done := make(chan os.Signal, 1)
-	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
-
-	<-done
-
-	// Stop server
-	logrus.Info("Server shutting down gracefully...")
-
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	if err := srv.Shutdown(ctx); err != nil {
-		logrus.WithError(err).Fatal("Failed to gracefully shut down server")
-	}
+	// Register sub-commands
+	CmdRoot.AddCommand(cmd.CmdRegister)
+	CmdRoot.AddCommand(cmd.CmdList)
+	CmdRoot.AddCommand(cmd.CmdServe)
 }
 
 // setup will set up configuration management and logging.
@@ -90,10 +57,16 @@ func setup(cmd *cobra.Command, args []string) error {
 	// Configuration file
 	viper.SetConfigName("config")
 	viper.AddConfigPath("/etc/hue-picker")
-	viper.AddConfigPath("$HOME/.config/hue-picker")
+	viper.AddConfigPath(os.Getenv("HOME") + "/.config/hue-picker")
 	viper.AddConfigPath(".")
 
-	viper.ReadInConfig() //nolint:errcheck
+	// Configuration file
+	if err := viper.ReadInConfig(); err != nil {
+		// Don't fail if config not found
+		if !errors.As(err, &viper.ConfigFileNotFoundError{}) {
+			logrus.WithError(err).Fatal("Unable to read config file")
+		}
+	}
 
 	// Logging
 	log.SetOutput(io.Discard)
@@ -105,7 +78,7 @@ func setup(cmd *cobra.Command, args []string) error {
 
 	logrus.SetLevel(lvl)
 
-	if viper.GetBool("json") {
+	if viper.GetBool("log-json") {
 		// Use JSON formatter
 		logrus.SetFormatter(&logrus.JSONFormatter{})
 	}
