@@ -31,10 +31,6 @@ func init() {
 	CmdRoot.PersistentFlags().String("log-level", "info", "verbosity of logging output")
 	CmdRoot.PersistentFlags().Bool("log-json", false, "change logging format to JSON")
 
-	// Hue Bridge
-	CmdRoot.PersistentFlags().String("bridge", "", "ID of the Hue bridge")
-	CmdRoot.PersistentFlags().String("user", "", "User ID registered to the Hue bridge")
-
 	// Register sub-commands
 	CmdRoot.AddCommand(cmd.CmdRegister)
 	CmdRoot.AddCommand(cmd.CmdList)
