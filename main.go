@@ -29,7 +29,11 @@ var CmdRoot = &cobra.Command{
 func init() {
 	// Logging
 	CmdRoot.PersistentFlags().String("log-level", "info", "verbosity of logging output")
-	CmdRoot.Flags().Bool("log-json", false, "change logging format to JSON")
+	CmdRoot.PersistentFlags().Bool("log-json", false, "change logging format to JSON")
+
+	// Hue Bridge
+	CmdRoot.PersistentFlags().String("bridge", "", "ID of the Hue bridge")
+	CmdRoot.PersistentFlags().String("user", "", "User ID registered to the Hue bridge")
 
 	// Register sub-commands
 	CmdRoot.AddCommand(cmd.CmdRegister)
