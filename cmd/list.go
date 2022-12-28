@@ -19,7 +19,7 @@ var CmdList = &cobra.Command{
 func init() {
 	// Hue Bridge
 	CmdList.Flags().String("bridge", "", "ID of the Hue bridge")
-	CmdList.Flags().String("user", "", "User ID registered to the Hue bridge")
+	CmdList.Flags().String("user", "", "ID of user registered to the Hue bridge")
 }
 
 // runList is called when the "list" command is used.
@@ -30,7 +30,7 @@ func runList(cmd *cobra.Command, args []string) {
 		logrus.WithError(err).Fatal("Failed to discover Hue bridges")
 	}
 
-	// Look for the proper one
+	// Look for the proper bridge
 	var bridge *huego.Bridge
 
 	for _, b := range bridges {
@@ -41,17 +41,18 @@ func runList(cmd *cobra.Command, args []string) {
 	}
 
 	if bridge == nil {
-		logrus.WithField("bridge", viper.GetString("bridge")).Fatal("Unable to find requested bridge")
+		logrus.WithField("bridge", viper.GetString("bridge")).Fatal("Unable to find requested Hue bridge")
 	}
 
 	bridge = bridge.Login(viper.GetString("user"))
 
-	// Dump all lights known
+	// Get all lights from the bridge
 	lights, err := bridge.GetLights()
 	if err != nil {
 		logrus.WithError(err).Fatal("Unable to get lights")
 	}
 
+	// Dump all lights known
 	for _, l := range lights {
 		logrus.
 			WithField("name", l.Name).
