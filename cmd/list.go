@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"fmt"
+	"strconv"
+
 	"github.com/amimof/huego"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -46,18 +49,45 @@ func runList(cmd *cobra.Command, args []string) {
 
 	bridge = bridge.Login(viper.GetString("user"))
 
-	// Get all lights from the bridge
+	// Get all lights
 	lights, err := bridge.GetLights()
 	if err != nil {
 		logrus.WithError(err).Fatal("Unable to get lights")
 	}
 
-	// Dump all lights known
-	for _, l := range lights {
-		logrus.
-			WithField("name", l.Name).
-			WithField("product", l.ProductName).
-			WithField("id", l.UniqueID).
-			Info("💡")
+	// Get all groups
+	groups, err := bridge.GetGroups()
+	if err != nil {
+		logrus.WithError(err).Fatal("Failed to get groups")
+	}
+
+	// Dump lights for each room
+	for _, g := range groups {
+		// Skip if group is no room
+		if g.Type != "Room" {
+			continue
+		}
+
+		// Skip if no lights in room
+		if len(g.Lights) == 0 {
+			continue
+		}
+
+		// Dump room lights
+		fmt.Printf("🏡 %s\n", g.Name)
+
+		for _, lid := range g.Lights {
+			for _, l := range lights {
+				// Bail on wrong IDs
+				if strconv.Itoa(l.ID) != lid {
+					continue
+				}
+
+				// Dump light
+				fmt.Printf("   💡 [%s] %s (%s)\n", l.UniqueID, l.Name, l.ProductName)
+			}
+		}
+
+		fmt.Println()
 	}
 }
