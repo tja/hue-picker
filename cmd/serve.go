@@ -80,15 +80,15 @@ func runServe(cmd *cobra.Command, args []string) {
 		logrus.WithField("light", viper.GetString("light")).Fatal("Unable to find requested light")
 	}
 
-	// Create API muxer
-	am, err := api.NewMux()
+	// Create API server
+	s, err := api.NewServer(bridge, light)
 	if err != nil {
-		logrus.WithError(err).Fatal("Unable to create API muxer")
+		logrus.WithError(err).Fatal("Unable to create API server")
 	}
 
 	// Start HTTP server
 	m := chi.NewMux()
-	m.Mount("/api", am.M)
+	m.Mount("/api", s.M)
 
 	srv := &http.Server{
 		Addr:    viper.GetString("host"),
