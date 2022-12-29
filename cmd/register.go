@@ -91,10 +91,9 @@ loop:
 			}
 
 			// Successfully created user
-			logrus.
-				WithField("bridge", bridges[0].ID).
-				WithField("user", user).
-				Info("Created user")
+			fmt.Printf("Successfully registered:\n")
+			fmt.Printf("   Bridge: %s\n", bridges[0].ID)
+			fmt.Printf("   User:   %s\n", user)
 
 			break loop
 		}
