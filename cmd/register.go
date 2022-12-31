@@ -92,6 +92,7 @@ loop:
 
 			// Successfully created user
 			fmt.Printf("Successfully registered:\n")
+			fmt.Printf("   Host:   %s\n", bridges[0].Host)
 			fmt.Printf("   Bridge: %s\n", bridges[0].ID)
 			fmt.Printf("   User:   %s\n", user)
 

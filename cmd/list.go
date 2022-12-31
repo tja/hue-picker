@@ -21,33 +21,45 @@ var CmdList = &cobra.Command{
 // Initialize command options
 func init() {
 	// Hue Bridge
-	CmdList.Flags().String("bridge", "", "ID of the Hue bridge")
+	CmdList.Flags().String("host", "", "Host address of the Hue bridge (or empty)")
+	CmdList.Flags().String("bridge", "", "ID of the Hue bridge (or empty)")
 	CmdList.Flags().String("user", "", "ID of user registered to the Hue bridge")
 }
 
 // runList is called when the "list" command is used.
 func runList(cmd *cobra.Command, args []string) {
-	// Discover all bridges in the network
-	bridges, err := huego.DiscoverAll()
-	if err != nil {
-		logrus.WithError(err).Fatal("Failed to discover Hue bridges")
-	}
-
-	// Look for the proper bridge
+	// Set up Hue bridge
 	var bridge *huego.Bridge
 
-	for _, b := range bridges {
-		if b.ID == viper.GetString("bridge") {
-			bridge = &b
-			break
+	if host := viper.GetString("host"); host != "" {
+		// Create Hue bridge directly
+		bridge = &huego.Bridge{
+			Host: host,
+			User: viper.GetString("user"),
+			ID:   viper.GetString("bridge"),
 		}
-	}
+	} else {
+		// Otherwise, discover all bridges in the network
+		bridges, err := huego.DiscoverAll()
+		if err != nil {
+			logrus.WithError(err).Fatal("Failed to discover Hue bridges")
+		}
 
-	if bridge == nil {
-		logrus.WithField("bridge", viper.GetString("bridge")).Fatal("Unable to find requested Hue bridge")
-	}
+		// Look for the proper bridge
+		for _, b := range bridges {
+			if b.ID == viper.GetString("bridge") {
+				bridge = &b
+				break
+			}
+		}
 
-	bridge = bridge.Login(viper.GetString("user"))
+		if bridge == nil {
+			logrus.WithField("bridge", viper.GetString("bridge")).Fatal("Unable to find requested Hue bridge")
+		}
+
+		// Log in
+		bridge = bridge.Login(viper.GetString("user"))
+	}
 
 	// Get all lights
 	lights, err := bridge.GetLights()
