@@ -1,0 +1,12 @@
+{
+  "name": "Hue Picker",
+  "short_name": "Hue Picker",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "images/icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
