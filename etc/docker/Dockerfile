@@ -16,6 +16,7 @@ RUN apk --no-cache add tini \
                        tzdata
 
 COPY --from=build /app/hue-picker /hue-picker
+COPY ./etc/www /etc/www
 
 EXPOSE 80
 

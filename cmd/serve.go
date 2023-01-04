@@ -27,7 +27,7 @@ var CmdServe = &cobra.Command{
 
 // Initialize command options
 func init() {
-	// Hue Bridge
+	// Hue
 	CmdServe.Flags().String("host", "", "Host address of the Hue bridge (or empty)")
 	CmdServe.Flags().String("bridge", "", "ID of the Hue bridge (or empty)")
 	CmdServe.Flags().String("user", "", "ID of user registered to the Hue bridge")
@@ -35,6 +35,7 @@ func init() {
 
 	// Server
 	CmdServe.Flags().String("listen", ":80", "host the server should listen on")
+	CmdServe.Flags().String("www", "./etc/www/", "folder to static web assets")
 }
 
 // runServe is called when the "list" command is used.
@@ -100,7 +101,9 @@ func runServe(cmd *cobra.Command, args []string) {
 
 	// Start HTTP server
 	m := chi.NewMux()
+
 	m.Mount("/api", s.M)
+	m.Handle("/*", http.FileServer(http.Dir(viper.GetString("www"))))
 
 	srv := &http.Server{
 		Addr:    viper.GetString("listen"),

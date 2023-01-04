@@ -24,7 +24,7 @@ var CmdRegister = &cobra.Command{
 
 // Initialize command options
 func init() {
-	// Disovery
+	// Discovery
 	CmdRegister.Flags().Int("index", -1, "Index of Hue bridge to register for")
 }
 

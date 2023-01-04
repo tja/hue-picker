@@ -20,7 +20,7 @@ var CmdList = &cobra.Command{
 
 // Initialize command options
 func init() {
-	// Hue Bridge
+	// Hue
 	CmdList.Flags().String("host", "", "Host address of the Hue bridge (or empty)")
 	CmdList.Flags().String("bridge", "", "ID of the Hue bridge (or empty)")
 	CmdList.Flags().String("user", "", "ID of user registered to the Hue bridge")
