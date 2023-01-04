@@ -38,6 +38,7 @@ func NewServer(bridge *huego.Bridge, light *huego.Light) (*Server, error) {
 // newGetLightHandlerFunc will return a new http.HandlerFunc to handle "GET /light".
 func (s *Server) newGetLightHandlerFunc() http.HandlerFunc {
 	// Request
+	//   None
 
 	// Response
 	type Response struct {
@@ -55,6 +56,8 @@ func (s *Server) newGetLightHandlerFunc() http.HandlerFunc {
 			logrus.WithError(err).Error("Unable to encode JSON response")
 			w.WriteHeader(http.StatusInternalServerError)
 		}
+
+		s.light = l
 
 		// Set headers
 		w.Header().Set("Content-Type", "application/json")
@@ -75,13 +78,41 @@ func (s *Server) newGetLightHandlerFunc() http.HandlerFunc {
 }
 
 // newPostLightHandlerFunc will return a new http.HandlerFunc to handle "POST /light".
-func (*Server) newPostLightHandlerFunc() http.HandlerFunc {
+func (s *Server) newPostLightHandlerFunc() http.HandlerFunc {
 	// Request
+	type Request struct {
+		On  bool   `json:"on"`  // Is the Light on or off?
+		Bri uint8  `json:"bri"` // Brightness
+		Hue uint16 `json:"hue"` // Hue
+		Sat uint8  `json:"sat"` // Saturation
+	}
 
 	// Response
+	//   None
 
 	// Handler
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("post light")) //nolint:errcheck
+		// Parse input request
+		var in Request
+
+		if err := json.NewDecoder(r.Body).Decode(&in); err != nil {
+			logrus.WithError(err).Error("Unable to decode JSON request")
+			w.WriteHeader(http.StatusBadRequest)
+		}
+
+		// Set light state
+		err := s.light.SetState(huego.State{
+			On:  in.On,
+			Bri: in.Bri,
+			Hue: in.Hue,
+			Sat: in.Sat,
+		})
+
+		if err != nil {
+			logrus.WithError(err).WithField("in", in).Error("Unable to set light state")
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+
+		w.WriteHeader(http.StatusOK)
 	}
 }
