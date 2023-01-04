@@ -1,10 +1,19 @@
-// Send color to API
-function sendColor(e) {
+// Global "queue"
+var queue = null;
+
+// Push color to "queue"
+function pushColor(e) {
+    // Don't report down-stream
+    e.preventDefault();
+
     // Scale to x = [-1..1] and y = [-1..1]
     const rc = e.target.getBoundingClientRect();
 
-    const x = 2 * (e.clientX - rc.left) / (rc.right - rc.left) - 1;
-    const y = 1 - 2 * (e.clientY - rc.top) / (rc.bottom - rc.top);
+    const cx = e.clientX || e.touches[0].clientX;
+    const cy = e.clientY || e.touches[0].clientY;
+
+    const x = 2 * (cx - rc.left) / (rc.right - rc.left) - 1;
+    const y = 1 - 2 * (cy - rc.top) / (rc.bottom - rc.top);
 
     // Hue is counter-clockwise angle from top
     var a = ((Math.PI / 2.0 - Math.atan2(y, x)) / Math.PI * 180.0);
@@ -17,27 +26,40 @@ function sendColor(e) {
 
     const sat = Math.round( Math.min(Math.max(d * 256.0 , 0), 255) )
 
+    // Push on "queue"
+    queue = {
+        on:    true,
+        hue:   hue,
+        sat:   sat,
+    }
+}
+
+// ...
+function processQueue() {
+    // Bail out if nothing to send
+    if (queue == null) {
+        return
+    }
+
     // Send to API
     var xhr = new XMLHttpRequest();
 
     xhr.open("POST", "/api/light", true);
     xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify(queue));
 
-    xhr.send(JSON.stringify({
-        on:    true,
-        hue:   hue,
-        sat:   sat,
-    }));
-}
-
-// Set up the color wheel
-function startup() {
-    const el = document.getElementById('color-wheel');
-
-    el.addEventListener('touchstart', sendColor);
-    el.addEventListener('touchmove', sendColor);
-    el.addEventListener('click', sendColor);
+    queue = null
 }
 
 // Call startup when document is loaded
-document.addEventListener('DOMContentLoaded', startup);
+document.addEventListener('DOMContentLoaded', function() {
+    // Set up color wheel
+    const el = document.getElementById('color-wheel');
+
+    el.addEventListener('touchstart', pushColor, false);
+    el.addEventListener('touchmove', pushColor, false);
+    el.addEventListener('click', pushColor, false);
+
+    // Never sent more than every 500ms
+    setInterval(processQueue, 500);
+});

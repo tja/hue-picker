@@ -1,7 +1,8 @@
 {
   "name": "Hue Picker",
   "short_name": "Hue Picker",
-  "display": "standalone",
+  "display": "fullscreen",
+  "orientation": "landscape",
   "icons": [
     {
       "src": "images/icon.png",
