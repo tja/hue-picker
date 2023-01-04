@@ -1,7 +1,12 @@
 {
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
   "name": "Hue Picker",
   "short_name": "Hue Picker",
+  "description": "💡 Philips Hue Color Picker",
+  "start_url": "/",
+  "scope": "/",
   "display": "fullscreen",
+  "background_color": "black",
   "orientation": "landscape",
   "icons": [
     {
