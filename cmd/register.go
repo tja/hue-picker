@@ -17,7 +17,7 @@ import (
 // Define command
 var CmdRegister = &cobra.Command{
 	Use:   "register [flags]",
-	Short: "...",
+	Short: "Register hue-picker with Philips Hue bridge",
 	Args:  cobra.NoArgs,
 	Run:   runRegister,
 }

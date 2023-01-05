@@ -13,7 +13,7 @@ import (
 // Define command
 var CmdList = &cobra.Command{
 	Use:   "list [flags]",
-	Short: "...",
+	Short: "List rooms and associated lights of given Philips Hue bridge",
 	Args:  cobra.NoArgs,
 	Run:   runList,
 }

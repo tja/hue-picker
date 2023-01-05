@@ -20,7 +20,7 @@ import (
 // Define command
 var CmdServe = &cobra.Command{
 	Use:   "serve [flags]",
-	Short: "...",
+	Short: "Serve web application via built-in web server",
 	Args:  cobra.NoArgs,
 	Run:   runServe,
 }
