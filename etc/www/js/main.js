@@ -34,7 +34,7 @@ function pushColor(e) {
     }
 }
 
-// ...
+// Process "queue"
 function processQueue() {
     // Bail out if nothing to send
     if (queue == null) {

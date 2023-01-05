@@ -9,15 +9,21 @@ body {
     width:              calc(min(100vw, 100vh) - 4rem);
     height:             calc(min(100vw, 100vh) - 4rem);
     margin:             auto;
-    background:         radial-gradient(white, transparent 70.7%),
+    background:         radial-gradient(closest-side, white, transparent),
                         conic-gradient(
-                            rgb(228,  63,   0),
-                            rgb(250, 228,  16),
-                            rgb( 85, 204,  59),
-                            rgb(  9, 173, 255),
-                            rgb(107,  14, 253),
-                            rgb(231,  13, 134),
-                            rgb(228,  63,   0)
+                            rgb(236,  91,  42),
+                            rgb(245, 177,  63),
+                            rgb(248, 230,  77),
+                            rgb(217, 255,  78),
+                            rgb(123, 254,  82),
+                            rgb(115, 243, 212),
+                            rgb( 75, 169, 250),
+                            rgb( 44,  66, 250),
+                            rgb(122,  23, 247),
+                            rgb(206,  42, 229),
+                            rgb(235,  52, 164),
+                            rgb(236,  54,  48),
+                            rgb(236,  91,  42)
                         );
     border-radius:      50%;
 }
