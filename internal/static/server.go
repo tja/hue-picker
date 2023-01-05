@@ -1,6 +1,6 @@
 package static
 
-//go:generate go run github.com/tdewolff/minify/v2/cmd/minify --recursive --output=. ../../etc/www
+//go:generate go run github.com/tdewolff/minify/v2/cmd/minify --sync --recursive --output=. ../../etc/www
 
 import (
 	"embed"
