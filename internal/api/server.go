@@ -23,7 +23,7 @@ type Server struct {
 func NewServer(bridge *huego.Bridge, light *huego.Light) (*Server, error) {
 	// Create Router object
 	s := &Server{
-		M:      chi.NewRouter(),
+		M:      chi.NewMux(),
 		bridge: bridge,
 		light:  light,
 	}

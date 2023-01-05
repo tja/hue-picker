@@ -15,6 +15,7 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/tja/hue-picker/internal/api"
+	"github.com/tja/hue-picker/internal/static"
 )
 
 // Define command
@@ -35,7 +36,7 @@ func init() {
 
 	// Server
 	CmdServe.Flags().String("listen", ":80", "host the server should listen on")
-	CmdServe.Flags().String("www", "./etc/www/", "folder to static web assets")
+	CmdServe.Flags().String("www", "", "folder to static web assets (or empty for default)")
 }
 
 // runServe is called when the "list" command is used.
@@ -94,7 +95,13 @@ func runServe(cmd *cobra.Command, args []string) {
 	}
 
 	// Create API server
-	s, err := api.NewServer(bridge, light)
+	asrv, err := api.NewServer(bridge, light)
+	if err != nil {
+		logrus.WithError(err).Fatal("Unable to create API server")
+	}
+
+	// Create static server
+	ssrv, err := static.NewServer(viper.GetString("www"))
 	if err != nil {
 		logrus.WithError(err).Fatal("Unable to create API server")
 	}
@@ -102,8 +109,8 @@ func runServe(cmd *cobra.Command, args []string) {
 	// Start HTTP server
 	m := chi.NewMux()
 
-	m.Mount("/api", s.M)
-	m.Handle("/*", http.FileServer(http.Dir(viper.GetString("www"))))
+	m.Mount("/api", asrv.M)
+	m.Handle("/*", ssrv.M)
 
 	srv := &http.Server{
 		Addr:    viper.GetString("listen"),

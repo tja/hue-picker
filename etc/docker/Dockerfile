@@ -4,6 +4,7 @@ FROM golang:1.19-alpine AS build
 WORKDIR /app
 COPY . .
 
+RUN go generate ./...
 RUN go build -ldflags="-s -w" -o hue-picker main.go
 
 # Deploy
@@ -16,7 +17,6 @@ RUN apk --no-cache add tini \
                        tzdata
 
 COPY --from=build /app/hue-picker /hue-picker
-COPY ./etc/www /etc/www
 
 EXPOSE 80
 
