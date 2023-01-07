@@ -10,8 +10,8 @@
   "orientation": "landscape",
   "icons": [
     {
-      "src": "images/icon.png",
-      "sizes": "180x180",
+      "src": "images/webapp.png",
+      "sizes": "1024x1024",
       "type": "image/png"
     }
   ]
