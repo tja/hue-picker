@@ -30,7 +30,7 @@ Pre-built binaries are available on the [release page](https://github.com/tja/hu
 Download the binary, make it executable, and move it to a folder in your `PATH`:
 
 ```bash
-curl -sSL https://github.com/tja/hue-picker/releases/download/v0.0.1/hue-picker-`uname -s`-`uname -m` >/tmp/hue-picker
+curl -sSL https://github.com/tja/hue-picker/releases/download/v0.1.0/hue-picker-`uname -s`-`uname -m` >/tmp/hue-picker
 chmod +x /tmp/hue-picker
 sudo mv /tmp/hue-picker /usr/local/bin/hue-picker
 ```
