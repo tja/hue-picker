@@ -13,11 +13,15 @@
 **Hue Picker** is a bare-bones web server and application tailored to controlling a single Philips Hue light.
 
 It can be used to give isolated control over an individual Hue light, without opening up the full smart home
-network. For instance, it allows kids to control the light in their own room, without being able to mess around
-with all other lights or smart home appliances.
+network. For instance, it allows children to control the light in their own room, without being able to mess
+around with all other lights or smart home appliances.
 
 The *Hue Picker* web application can be installed as an App on the home-screen of iOS and Android devices to
 further simplify its usage.
+
+<p align="center">
+    <img width="480" src="etc/media/hero.gif">
+</p>
 
 
 ## Installation
