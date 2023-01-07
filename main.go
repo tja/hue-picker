@@ -15,7 +15,7 @@ import (
 	"github.com/tja/hue-picker/cmd"
 )
 
-// Define root command
+// CmdRoot defines the CLI root command.
 var CmdRoot = &cobra.Command{
 	Use:               "hue-picker",
 	Long:              "Philips Hue Color Picker",
@@ -25,7 +25,7 @@ var CmdRoot = &cobra.Command{
 	PersistentPreRunE: setup,
 }
 
-// Initialize command options
+// Initialize CLI options.
 func init() {
 	// Logging
 	CmdRoot.PersistentFlags().String("log-level", "info", "verbosity of logging output")

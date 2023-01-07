@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Define command
+// CmdList defines the CLI sub-command 'list'.
 var CmdList = &cobra.Command{
 	Use:   "list [flags]",
 	Short: "List rooms and associated lights of given Philips Hue bridge",
@@ -18,7 +18,7 @@ var CmdList = &cobra.Command{
 	Run:   runList,
 }
 
-// Initialize command options
+// Initialize CLI options.
 func init() {
 	// Hue
 	CmdList.Flags().String("host", "", "Host address of the Hue bridge (or empty)")

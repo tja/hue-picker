@@ -18,7 +18,7 @@ import (
 	"github.com/tja/hue-picker/internal/static"
 )
 
-// Define command
+// CmdServe defines the CLI sub-command 'serve'.
 var CmdServe = &cobra.Command{
 	Use:   "serve [flags]",
 	Short: "Serve web application via built-in web server",
@@ -26,7 +26,7 @@ var CmdServe = &cobra.Command{
 	Run:   runServe,
 }
 
-// Initialize command options
+// Initialize CLI options.
 func init() {
 	// Hue
 	CmdServe.Flags().String("host", "", "Host address of the Hue bridge (or empty)")

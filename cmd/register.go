@@ -14,7 +14,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Define command
+// CmdRegister defines the CLI sub-command 'register'.
 var CmdRegister = &cobra.Command{
 	Use:   "register [flags]",
 	Short: "Register hue-picker with Philips Hue bridge",
@@ -22,7 +22,7 @@ var CmdRegister = &cobra.Command{
 	Run:   runRegister,
 }
 
-// Initialize command options
+// Initialize CLI options.
 func init() {
 	// Discovery
 	CmdRegister.Flags().Int("index", -1, "Index of Hue bridge to register for")
