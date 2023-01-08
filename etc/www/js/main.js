@@ -16,10 +16,10 @@ function pushColor(e) {
     const y = 1 - 2 * (cy - rc.top) / (rc.bottom - rc.top);
 
     // Hue is counter-clockwise angle from top
-    var a = ((Math.PI / 2.0 - Math.atan2(y, x)) / Math.PI * 180.0);
-    if (a < 0.0) { a += 360.0; }
+    var a = Math.PI / 2.0 - Math.atan2(y, x);
+    if (a < 0.0) { a += Math.PI * 2.0; }
 
-    const hue = Math.round( Math.min(Math.max(a * 65536.0 / 360.0, 0), 65535) );
+    const hue = Math.round( Math.min(Math.max(a * 32768.0 / Math.PI, 0), 65535) );
 
     // Sat is distance to origin
     var d = Math.sqrt(x * x + y * y);
@@ -37,10 +37,10 @@ function pushColor(e) {
     // Update marker position and color
     var re = document.querySelector(':root');
 
-    re.style.setProperty('--marker-x', ((1.0 + x) * 50.0) + '%');
-    re.style.setProperty('--marker-y', ((1.0 - y) * 50.0) + '%');
+    re.style.setProperty('--marker-x', ((1.0 + Math.sin(a) * d) * 50.0) + '%');
+    re.style.setProperty('--marker-y', ((1.0 - Math.cos(a) * d) * 50.0) + '%');
     re.style.setProperty('--marker-display', "block");
-    re.style.setProperty('--marker-color', "hsl(" + a + "deg, 100%, " + (100 - (d * 50.0)) + "%)" );
+    re.style.setProperty('--marker-color', "hsl(" + a + "rad, 100%, " + (100 - (d * 50.0)) + "%)" );
 }
 
 // Process "queue"
