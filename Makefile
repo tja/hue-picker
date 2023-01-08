@@ -1,5 +1,6 @@
 NAME=hue-picker
-FLAGS=-ldflags="-s -w" -trimpath
+VERSION=`git describe --tag`
+FLAGS=-ldflags="-s -w -X 'main.Version=${VERSION}'" -trimpath
 
 .PHONY: build clean
 

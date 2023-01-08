@@ -15,12 +15,15 @@ import (
 	"github.com/tja/hue-picker/cmd"
 )
 
+// Version will be set during build.
+var Version string = "(unknown)"
+
 // CmdRoot defines the CLI root command.
 var CmdRoot = &cobra.Command{
 	Use:               "hue-picker",
 	Long:              "Philips Hue Color Picker",
 	Args:              cobra.NoArgs,
-	Version:           "0.1.0",
+	Version:           Version,
 	CompletionOptions: cobra.CompletionOptions{DisableDefaultCmd: true},
 	PersistentPreRunE: setup,
 }
