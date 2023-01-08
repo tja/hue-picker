@@ -19,26 +19,35 @@ function pushColor(e) {
     var a = ((Math.PI / 2.0 - Math.atan2(y, x)) / Math.PI * 180.0);
     if (a < 0.0) { a += 360.0; }
 
-    const hue = Math.round( Math.min(Math.max(a * 65536.0 / 360.0, 0), 65535) )
+    const hue = Math.round( Math.min(Math.max(a * 65536.0 / 360.0, 0), 65535) );
 
     // Sat is distance to origin
-    const d = Math.min(1.0, Math.sqrt(x * x + y * y));
+    var d = Math.sqrt(x * x + y * y);
+    if (d > 1.0) { d = 1.0; }
 
-    const sat = Math.round( Math.min(Math.max(d * 256.0 , 0), 255) )
+    const sat = Math.round( Math.min(Math.max(d * 256.0 , 0), 255) );
 
     // Push on "queue"
     queue = {
         on:    true,
         hue:   hue,
         sat:   sat,
-    }
+    };
+
+    // Update marker position and color
+    var re = document.querySelector(':root');
+
+    re.style.setProperty('--marker-x', ((1.0 + x) * 50.0) + '%');
+    re.style.setProperty('--marker-y', ((1.0 - y) * 50.0) + '%');
+    re.style.setProperty('--marker-display', "block");
+    re.style.setProperty('--marker-color', "hsl(" + a + "deg, 100%, " + (100 - (d * 50.0)) + "%)" );
 }
 
 // Process "queue"
 function processQueue() {
     // Bail out if nothing to send
     if (queue == null) {
-        return
+        return;
     }
 
     // Send to API
@@ -48,7 +57,7 @@ function processQueue() {
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(queue));
 
-    queue = null
+    queue = null;
 }
 
 // Call startup when document is loaded
