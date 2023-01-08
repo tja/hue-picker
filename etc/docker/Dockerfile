@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . .
 
 RUN go generate ./...
-RUN go build -ldflags="-s -w" -o hue-picker main.go
+RUN go build -ldflags="-s -w -X 'main.Version=$(git describe --tag)'" -o hue-picker main.go
 
 # Deploy
 FROM alpine:3.17 AS deploy
