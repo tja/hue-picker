@@ -1,11 +1,23 @@
+html {
+    height:             100%;
+}
+
 body {
-    padding:            2rem;
     margin:             0;
+    padding:            0;
     background:         black;
     overflow:           hidden;
+    height:             100%;
+}
+
+div.outer {
+    display:            flex;
+    align-items:        center;
+    height:             100vh;
 }
 
 #color-wheel {
+    margin:             2rem;
     width:              calc(min(100vw, 100vh) - 4rem);
     height:             calc(min(100vw, 100vh) - 4rem);
     margin:             auto;
