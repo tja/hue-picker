@@ -1,6 +1,8 @@
 # Build
 FROM golang:1.19-alpine AS build
 
+RUN apk --no-cache add git
+
 WORKDIR /app
 COPY . .
 
